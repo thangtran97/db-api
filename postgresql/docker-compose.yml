@@ -1,0 +1,17 @@
+version: "3"
+services:
+  postgresql-test:
+    image: "postgres:12-alpine"
+    container_name: "sraasahi_db"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=sraasahi
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - sraasahi_db:/var/lib/postgresql/data
+
+volumes:
+  sraasahi_db:
