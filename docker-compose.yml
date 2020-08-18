@@ -1,0 +1,10 @@
+version: '3'
+services:
+    postgresql:
+        image: postgres:11
+        environment:
+        POSTGRES_DB: asahi
+        POSTGRES_USER: asahi
+        POSTGRES_PASSWORD: sraasahi
+        ports:
+        - 5432:5432
