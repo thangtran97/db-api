@@ -1,0 +1,19 @@
+#Import file dump postgres with docker
+
+1. copy file dump to container postgres
+    docker cp file_dump_name container_name:file_dump_name
+
+    example:docker cp ./src/jinbutsudb.sql db-api_postgres_1:jinbutsudb.sql
+
+2. vận hành trong 1 docker container đã tồn tại
+    docker exec -it db-api_postgres_1 sh
+
+3. Run câu lệnh import file_dump_name
+
+    psql postgres < jinbutsudb.sql
+    *Note: nếu có lỗi :
+        "psql: error: could not connect to server: FATAL:  role "root" does not exist"
+    cấp quyền cho qsql
+    su - postgres
+    cd /
+    psql postgres < jinbutsudb.sql
