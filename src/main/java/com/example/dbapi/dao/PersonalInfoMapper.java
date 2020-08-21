@@ -26,7 +26,7 @@ public class PersonalInfoMapper implements RowMapper<PersonalInfo> {
         personalInfo.setSeinengappi(rs.getString("seinengappi"));
         personalInfo.setWarekiSeinen(rs.getString("wareki_seinen"));
         personalInfo.setShusseiTodouhuken(rs.getString("shussei_todouhuken"));
-        personalInfo.setShusshinShichou(rs.getString("shussei_shichou"));
+        personalInfo.setShusseiShichou(rs.getString("shussei_shichou"));
         personalInfo.setShusshinTodouhuken(rs.getString("shusshin_todouhuken"));
         personalInfo.setShusshinShichou(rs.getString("shusshin_shichou"));
         personalInfo.setShibouNichiji(rs.getString("shibou_nichiji"));
@@ -109,7 +109,7 @@ public class PersonalInfoMapper implements RowMapper<PersonalInfo> {
         personalInfo.setRenrakusakiJuushoPub(rs.getString("renrakusaki_juusho_pub"));
         personalInfo.setRenrakusakiDenwaPub(rs.getString("renrakusaki_denwa_pub"));
         personalInfo.setRenrakusakiFaxPub(rs.getString("renrakusaki_fax_pub"));
-        personalInfo.setKeitaidenwa(rs.getString("keitaidenwa_pub"));
+        personalInfo.setKeitaidenwaPub(rs.getString("keitaidenwa_pub"));
         personalInfo.setEmailPub(rs.getString("email_pub"));
         personalInfo.setHomepagePub(rs.getString("homepage_pub"));
         personalInfo.setSouhusakiJuushoPub(rs.getString("souhusaki_juusho_pub"));
