@@ -27,15 +27,17 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
       return mapResponse;
     }
 
-    List<PersonalInfo> personalInfoList = personalInfoRepository.searchByConditions(statement, offset, limit);
-    if (personalInfoList.isEmpty()) {
+    Integer totalResult = personalInfoRepository.countByConditions(statement);
+    if (totalResult == 0) {
       mapResponse.put("sqlstate", "02000");
-      mapResponse.put("count", personalInfoList.size());
+      mapResponse.put("count", totalResult);
       mapResponse.put("message", "no_data");
       return mapResponse;
     }
+
+    List<PersonalInfo> personalInfoList = personalInfoRepository.searchByConditions(statement, offset, limit);
     mapResponse.put("sqlstate", "00000");
-    mapResponse.put("count", personalInfoList.size());
+    mapResponse.put("count", totalResult);
     mapResponse.put("results", personalInfoList);
     return mapResponse;
   }

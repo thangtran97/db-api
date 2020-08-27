@@ -27,6 +27,13 @@ public class PersonalInfoDAO implements PersonalInfoRepository {
   }
 
   @Override
+  public Integer countByConditions(String statement) {
+    String sql = statement.replaceFirst("SELECT * ", "SELECT count(*) ");
+    Map param = new HashMap<String, Object>();
+    return jdbcTemplate.queryForObject(sql, param, Integer.class);
+  }
+
+  @Override
   public List<PersonalInfo> getDetail(String inputCode) {
     String sql = "SELECT * FROM public_personal_info WHERE input_code = :input_code LIMIT 1";
     Map param = new HashMap<String, Object>();
