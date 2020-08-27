@@ -27,10 +27,10 @@ public class PersonalInfoDAO implements PersonalInfoRepository {
   }
 
   @Override
-  public Integer countByConditions(String statement) {
-    String sql = statement.replaceFirst("SELECT * ", "SELECT count(*) ");
+  public List<PersonalInfo> countByConditions(String statement) {
+    String sql = statement;
     Map param = new HashMap<String, Object>();
-    return jdbcTemplate.queryForObject(sql, param, Integer.class);
+    return jdbcTemplate.query(sql, param, new PersonalInfoMapper());
   }
 
   @Override

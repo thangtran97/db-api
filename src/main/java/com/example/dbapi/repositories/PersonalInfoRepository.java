@@ -8,7 +8,7 @@ public interface PersonalInfoRepository {
 
   List<PersonalInfo> searchByConditions(String statement, Integer offset, Integer limit);
 
-  Integer countByConditions(String statement);
+  List<PersonalInfo> countByConditions(String statement);
 
   List<PersonalInfo> getDetail(String inputCode);
 
