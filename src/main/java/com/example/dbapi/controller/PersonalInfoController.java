@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PersonalInfoController {
 
   @Autowired
-  PersonalInfoService personalInfoService;
+  private PersonalInfoService personalInfoService;
 
   @PostMapping("/select")
   public ResponseEntity search(@RequestBody SearchQuery searchQuery) {

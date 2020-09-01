@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.dbapi.models.PersonalInfo;
+import com.example.dbapi.models.User;
 import com.example.dbapi.repositories.PersonalInfoRepository;
 import com.example.dbapi.services.PersonalInfoService;
 
+import com.example.dbapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +17,14 @@ import org.springframework.stereotype.Service;
 public class PersonalInfoServiceImpl implements PersonalInfoService {
 
   @Autowired
-  PersonalInfoRepository personalInfoRepository;
+  private PersonalInfoRepository personalInfoRepository;
+
+  @Autowired
+  private UserService userService;
 
   @Override
   public Map<String, Object> searchByConditions(String userId, String statement, Integer offset, Integer limit) {
     Map<String, Object> mapResponse = new LinkedHashMap<>();
-    if (statement.isEmpty()) {
-      mapResponse.put("sqlstate", "26000");
-      mapResponse.put("count", 0);
-      mapResponse.put("message", "invalid_sql_statement_name");
-      return mapResponse;
-    }
-
     Integer totalResult = personalInfoRepository.countByConditions(statement).size();
     if (totalResult == 0) {
       mapResponse.put("sqlstate", "02000");
@@ -45,14 +43,15 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
   @Override
   public Map<String, Object> getDetail(String userId, String inputCode) {
     Map<String, Object> mapResponse = new LinkedHashMap<>();
-    if (inputCode.isEmpty()) {
-      mapResponse.put("sqlstate", "26000");
-      mapResponse.put("count", 0);
-      mapResponse.put("message", "invalid_sql_statement_name");
-      return mapResponse;
+    User user = userService.getUserByUserNo(userId);
+    List<PersonalInfo> personalInfoList;
+
+    if (user.getAuthorities().contains("SENSITIVE")) {
+      personalInfoList = personalInfoRepository.getDetailSecret(inputCode);
+    } else {
+      personalInfoList = personalInfoRepository.getDetail(inputCode);
     }
 
-    List<PersonalInfo> personalInfoList = personalInfoRepository.getDetailSecret(inputCode);
     if (personalInfoList.isEmpty()) {
       mapResponse.put("sqlstate", "02000");
       mapResponse.put("count", personalInfoList.size());
