@@ -25,7 +25,15 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
   @Override
   public Map<String, Object> searchByConditions(String userId, String statement, Integer offset, Integer limit) {
     Map<String, Object> mapResponse = new LinkedHashMap<>();
-    Integer totalResult = personalInfoRepository.countByConditions(statement).size();
+    User user = userService.getUserByUserNo(userId);
+    Integer totalResult;
+
+    if (user.getAuthorities().contains("SENSITIVE")) {
+      totalResult = personalInfoRepository.countSecretByConditions(statement).size();
+    } else {
+      totalResult = personalInfoRepository.countByConditions(statement).size();
+    }
+    totalResult = personalInfoRepository.countByConditions(statement).size();
     if (totalResult == 0) {
       mapResponse.put("sqlstate", "02000");
       mapResponse.put("count", totalResult);
@@ -33,7 +41,12 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
       return mapResponse;
     }
 
-    List<PersonalInfo> personalInfoList = personalInfoRepository.searchByConditions(statement, offset, limit);
+    List<PersonalInfo> personalInfoList;
+    if (user.getAuthorities().contains("SENSITIVE")) {
+      personalInfoList = personalInfoRepository.searchPersonalSecretByConditions(statement, offset, limit);
+    } else {
+      personalInfoList = personalInfoRepository.searchPersonalInfoByConditions(statement, offset, limit);
+    }
     mapResponse.put("sqlstate", "00000");
     mapResponse.put("count", totalResult);
     mapResponse.put("results", personalInfoList);
@@ -47,9 +60,9 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
     List<PersonalInfo> personalInfoList;
 
     if (user.getAuthorities().contains("SENSITIVE")) {
-      personalInfoList = personalInfoRepository.getDetailSecret(inputCode);
+      personalInfoList = personalInfoRepository.getDetailPersonalSecret(inputCode);
     } else {
-      personalInfoList = personalInfoRepository.getDetail(inputCode);
+      personalInfoList = personalInfoRepository.getDetailPersonalInfo(inputCode);
     }
 
     if (personalInfoList.isEmpty()) {

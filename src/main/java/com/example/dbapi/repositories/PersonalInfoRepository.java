@@ -6,12 +6,16 @@ import com.example.dbapi.models.PersonalInfo;
 
 public interface PersonalInfoRepository {
 
-  List<PersonalInfo> searchByConditions(String statement, Integer offset, Integer limit);
+  List<PersonalInfo> searchPersonalInfoByConditions(String statement, Integer offset, Integer limit);
+
+  List<PersonalInfo> searchPersonalSecretByConditions(String statement, Integer offset, Integer limit);
 
   List<PersonalInfo> countByConditions(String statement);
 
-  List<PersonalInfo> getDetail(String inputCode);
+  List<PersonalInfo> countSecretByConditions(String statement);
 
-  List<PersonalInfo> getDetailSecret(String inputCode);
+  List<PersonalInfo> getDetailPersonalInfo(String inputCode);
+
+  List<PersonalInfo> getDetailPersonalSecret(String inputCode);
 
 }
