@@ -11,6 +11,7 @@ import com.example.dbapi.services.PersonalInfoService;
 
 import com.example.dbapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,28 +29,35 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
     User user = userService.getUserByUserNo(userId);
     Integer totalResult;
 
-    if (user.getAuthorities().contains("SENSITIVE")) {
-      totalResult = personalInfoRepository.countSecretByConditions(statement).size();
-    } else {
+    try {
+      if (user.getAuthorities().contains("SENSITIVE")) {
+        totalResult = personalInfoRepository.countSecretByConditions(statement).size();
+      } else {
+        totalResult = personalInfoRepository.countByConditions(statement).size();
+      }
       totalResult = personalInfoRepository.countByConditions(statement).size();
-    }
-    totalResult = personalInfoRepository.countByConditions(statement).size();
-    if (totalResult == 0) {
-      mapResponse.put("sqlstate", "02000");
-      mapResponse.put("count", totalResult);
-      mapResponse.put("message", "no_data");
-      return mapResponse;
+      if (totalResult == 0) {
+        mapResponse.put("sqlstate", "02000");
+        mapResponse.put("count", 0);
+        mapResponse.put("message", "no_data");
+        return mapResponse;
+      } else {
+        List<PersonalInfo> personalInfoList;
+        if (user.getAuthorities().contains("SENSITIVE")) {
+          personalInfoList = personalInfoRepository.searchPersonalSecretByConditions(statement, offset, limit);
+        } else {
+          personalInfoList = personalInfoRepository.searchPersonalInfoByConditions(statement, offset, limit);
+        }
+        mapResponse.put("sqlstate", "00000");
+        mapResponse.put("count", totalResult);
+        mapResponse.put("results", personalInfoList);
+      }
+    } catch (Exception e) {
+      mapResponse.put("sqlstate", "26000");
+      mapResponse.put("count", 0);
+      mapResponse.put("message", "invalid_sql_statement_name");
     }
 
-    List<PersonalInfo> personalInfoList;
-    if (user.getAuthorities().contains("SENSITIVE")) {
-      personalInfoList = personalInfoRepository.searchPersonalSecretByConditions(statement, offset, limit);
-    } else {
-      personalInfoList = personalInfoRepository.searchPersonalInfoByConditions(statement, offset, limit);
-    }
-    mapResponse.put("sqlstate", "00000");
-    mapResponse.put("count", totalResult);
-    mapResponse.put("results", personalInfoList);
     return mapResponse;
   }
 
@@ -59,21 +67,28 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
     User user = userService.getUserByUserNo(userId);
     List<PersonalInfo> personalInfoList;
 
-    if (user.getAuthorities().contains("SENSITIVE")) {
-      personalInfoList = personalInfoRepository.getDetailPersonalSecret(inputCode);
-    } else {
-      personalInfoList = personalInfoRepository.getDetailPersonalInfo(inputCode);
+    try {
+      if (user.getAuthorities().contains("SENSITIVE")) {
+        personalInfoList = personalInfoRepository.getDetailPersonalSecret(inputCode);
+      } else {
+        personalInfoList = personalInfoRepository.getDetailPersonalInfo(inputCode);
+      }
+
+      if (personalInfoList.isEmpty()) {
+        mapResponse.put("sqlstate", "02000");
+        mapResponse.put("count", 0);
+        mapResponse.put("message", "no_data");
+      } else {
+        mapResponse.put("sqlstate", "00000");
+        mapResponse.put("count", personalInfoList.size());
+        mapResponse.put("results", personalInfoList);
+      }
+    } catch (Exception e) {
+      mapResponse.put("sqlstate", "26000");
+      mapResponse.put("count", 0);
+      mapResponse.put("message", "invalid_sql_statement_name");
     }
 
-    if (personalInfoList.isEmpty()) {
-      mapResponse.put("sqlstate", "02000");
-      mapResponse.put("count", personalInfoList.size());
-      mapResponse.put("message", "no_data");
-      return mapResponse;
-    }
-    mapResponse.put("sqlstate", "00000");
-    mapResponse.put("count", personalInfoList.size());
-    mapResponse.put("results", personalInfoList);
     return mapResponse;
   }
 
