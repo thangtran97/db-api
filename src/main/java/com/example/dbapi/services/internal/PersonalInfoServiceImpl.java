@@ -53,6 +53,7 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
         mapResponse.put("results", personalInfoList);
       }
     } catch (Exception e) {
+      System.out.println(e);
       mapResponse.put("sqlstate", "26000");
       mapResponse.put("count", 0);
       mapResponse.put("message", "invalid_sql_statement_name");
@@ -84,6 +85,7 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
         mapResponse.put("results", personalInfoList);
       }
     } catch (Exception e) {
+      System.out.println(e);
       mapResponse.put("sqlstate", "26000");
       mapResponse.put("count", 0);
       mapResponse.put("message", "invalid_sql_statement_name");
