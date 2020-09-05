@@ -35,7 +35,6 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
       } else {
         totalResult = personalInfoRepository.countByConditions(statement).size();
       }
-      totalResult = personalInfoRepository.countByConditions(statement).size();
       if (totalResult == 0) {
         mapResponse.put("sqlstate", "02000");
         mapResponse.put("count", 0);
