@@ -10,11 +10,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class PersonalInfo {
+public class PersonalSecret {
 
   private String inputCode;
 
   private String motoCode;
+
+  private String classCode;
 
   private String tourokumei;
 

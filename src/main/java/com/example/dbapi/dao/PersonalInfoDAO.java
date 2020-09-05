@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.dbapi.models.PersonalInfo;
+import com.example.dbapi.models.PersonalSecret;
 import com.example.dbapi.repositories.PersonalInfoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class PersonalInfoDAO implements PersonalInfoRepository {
   NamedParameterJdbcTemplate jdbcTemplate;
 
   @Override
-  public List<PersonalInfo> searchPersonalSecretByConditions(String statement, Integer offset, Integer limit) {
+  public List<PersonalSecret> searchPersonalSecretByConditions(String statement, Integer offset, Integer limit) {
     String sql = statement + " LIMIT :limit OFFSET :offset";
     Map param = new HashMap<String, Object>();
     param.put("limit", limit);
@@ -43,7 +44,7 @@ public class PersonalInfoDAO implements PersonalInfoRepository {
   }
 
   @Override
-  public List<PersonalInfo> countSecretByConditions(String statement) {
+  public List<PersonalSecret> countSecretByConditions(String statement) {
     String sql = statement;
     Map param = new HashMap<String, Object>();
     return jdbcTemplate.query(sql, param, new PersonalSecretMapper());
@@ -58,7 +59,7 @@ public class PersonalInfoDAO implements PersonalInfoRepository {
   }
 
   @Override
-  public List<PersonalInfo> getDetailPersonalSecret(String inputCode) {
+  public List<PersonalSecret> getDetailPersonalSecret(String inputCode) {
     String sql = "SELECT * FROM public_personal_secret WHERE input_code = :input_code";
     Map param = new HashMap<String, Object>();
     param.put("input_code", inputCode);
