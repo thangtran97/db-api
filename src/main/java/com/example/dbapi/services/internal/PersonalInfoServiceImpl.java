@@ -44,7 +44,7 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
       } else {
 
         if (user.getAuthorities().contains("SENSITIVE")) {
-          List<PersonalSecret> personalSecretsList;
+          List<PersonalInfo> personalSecretsList;
           personalSecretsList = personalInfoRepository.searchPersonalSecretByConditions(statement, offset, limit);
           mapResponse.put("sqlstate", "00000");
           mapResponse.put("count", totalResult);
