@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.dbapi.models.PersonalInfo;
+import com.example.dbapi.models.PersonalSecret;
 import com.example.dbapi.models.User;
 import com.example.dbapi.repositories.PersonalInfoRepository;
 import com.example.dbapi.services.PersonalInfoService;
@@ -41,15 +42,21 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
         mapResponse.put("message", "no_data");
         return mapResponse;
       } else {
-        List<PersonalInfo> personalInfoList;
+
         if (user.getAuthorities().contains("SENSITIVE")) {
-          personalInfoList = personalInfoRepository.searchPersonalSecretByConditions(statement, offset, limit);
+          List<PersonalSecret> personalSecretsList;
+          personalSecretsList = personalInfoRepository.searchPersonalSecretByConditions(statement, offset, limit);
+          mapResponse.put("sqlstate", "00000");
+          mapResponse.put("count", totalResult);
+          mapResponse.put("results", personalSecretsList);
         } else {
+          List<PersonalInfo> personalInfoList;
           personalInfoList = personalInfoRepository.searchPersonalInfoByConditions(statement, offset, limit);
+          mapResponse.put("sqlstate", "00000");
+          mapResponse.put("count", totalResult);
+          mapResponse.put("results", personalInfoList);
         }
-        mapResponse.put("sqlstate", "00000");
-        mapResponse.put("count", totalResult);
-        mapResponse.put("results", personalInfoList);
+
       }
     } catch (Exception e) {
       System.out.println(e);
@@ -65,24 +72,34 @@ public class PersonalInfoServiceImpl implements PersonalInfoService {
   public Map<String, Object> getDetail(String userId, String inputCode) {
     Map<String, Object> mapResponse = new LinkedHashMap<>();
     User user = userService.getUserByUserNo(userId);
-    List<PersonalInfo> personalInfoList;
 
     try {
       if (user.getAuthorities().contains("SENSITIVE")) {
-        personalInfoList = personalInfoRepository.getDetailPersonalSecret(inputCode);
+        List<PersonalSecret> personalSecretList;
+        personalSecretList = personalInfoRepository.getDetailPersonalSecret(inputCode);
+        if (personalSecretList.isEmpty()) {
+          mapResponse.put("sqlstate", "02000");
+          mapResponse.put("count", 0);
+          mapResponse.put("message", "no_data");
+        } else {
+          mapResponse.put("sqlstate", "00000");
+          mapResponse.put("count", personalSecretList.size());
+          mapResponse.put("results", personalSecretList);
+        }
       } else {
+        List<PersonalInfo> personalInfoList;
         personalInfoList = personalInfoRepository.getDetailPersonalInfo(inputCode);
+        if (personalInfoList.isEmpty()) {
+          mapResponse.put("sqlstate", "02000");
+          mapResponse.put("count", 0);
+          mapResponse.put("message", "no_data");
+        } else {
+          mapResponse.put("sqlstate", "00000");
+          mapResponse.put("count", personalInfoList.size());
+          mapResponse.put("results", personalInfoList);
+        }
       }
 
-      if (personalInfoList.isEmpty()) {
-        mapResponse.put("sqlstate", "02000");
-        mapResponse.put("count", 0);
-        mapResponse.put("message", "no_data");
-      } else {
-        mapResponse.put("sqlstate", "00000");
-        mapResponse.put("count", personalInfoList.size());
-        mapResponse.put("results", personalInfoList);
-      }
     } catch (Exception e) {
       System.out.println(e);
       mapResponse.put("sqlstate", "26000");
