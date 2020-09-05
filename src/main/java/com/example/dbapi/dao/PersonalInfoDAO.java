@@ -19,12 +19,12 @@ public class PersonalInfoDAO implements PersonalInfoRepository {
   NamedParameterJdbcTemplate jdbcTemplate;
 
   @Override
-  public List<PersonalSecret> searchPersonalSecretByConditions(String statement, Integer offset, Integer limit) {
+  public List<PersonalInfo> searchPersonalSecretByConditions(String statement, Integer offset, Integer limit) {
     String sql = statement + " LIMIT :limit OFFSET :offset";
     Map param = new HashMap<String, Object>();
     param.put("limit", limit);
     param.put("offset", offset);
-    return jdbcTemplate.query(sql, param, new PersonalSecretMapper());
+    return jdbcTemplate.query(sql, param, new PersonalInfoMapperBase());
   }
 
   @Override
@@ -33,21 +33,21 @@ public class PersonalInfoDAO implements PersonalInfoRepository {
     Map param = new HashMap<String, Object>();
     param.put("limit", limit);
     param.put("offset", offset);
-    return jdbcTemplate.query(sql, param, new PersonalInfoMapper());
+    return jdbcTemplate.query(sql, param, new PersonalInfoMapperBase());
   }
 
   @Override
   public List<PersonalInfo> countByConditions(String statement) {
     String sql = statement;
     Map param = new HashMap<String, Object>();
-    return jdbcTemplate.query(sql, param, new PersonalInfoMapper());
+    return jdbcTemplate.query(sql, param, new PersonalInfoMapperBase());
   }
 
   @Override
-  public List<PersonalSecret> countSecretByConditions(String statement) {
+  public List<PersonalInfo> countSecretByConditions(String statement) {
     String sql = statement;
     Map param = new HashMap<String, Object>();
-    return jdbcTemplate.query(sql, param, new PersonalSecretMapper());
+    return jdbcTemplate.query(sql, param, new PersonalInfoMapperBase());
   }
 
   @Override

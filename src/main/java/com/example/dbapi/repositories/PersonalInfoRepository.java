@@ -9,11 +9,11 @@ public interface PersonalInfoRepository {
 
   List<PersonalInfo> searchPersonalInfoByConditions(String statement, Integer offset, Integer limit);
 
-  List<PersonalSecret> searchPersonalSecretByConditions(String statement, Integer offset, Integer limit);
+  List<PersonalInfo> searchPersonalSecretByConditions(String statement, Integer offset, Integer limit);
 
   List<PersonalInfo> countByConditions(String statement);
 
-  List<PersonalSecret> countSecretByConditions(String statement);
+  List<PersonalInfo> countSecretByConditions(String statement);
 
   List<PersonalInfo> getDetailPersonalInfo(String inputCode);
 
