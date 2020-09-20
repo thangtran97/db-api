@@ -20,6 +20,12 @@ public class UserServiceImpl implements UserService {
     User users = new User();
     // local用スタブ
     switch (userNo) {
+
+      case "":
+        users.setUsername("Unknown");
+        users.setUserNo(userNo);
+        users.setAuthorities(getAuthList(false, false, false));
+        break;
       // センシティブ:有り,編集権限:責任者,ネットワーク:青LAN
       case "1111":
         users.setUsername("朝日太郎１");
